@@ -12,24 +12,29 @@ import (
 
 // anime-name ep_no sub/dub
 
+func HandleReadingError(err error, issueIn string) {
+	if err != nil {
+		log.Fatalln(fmt.Sprintf("Error while Reading the %s from the command-line: ", issueIn), err)
+	}
+}
+
 var rootDomain = "https://ww1.gogoanime2.org"
 
 func main() {
 	arguments := os.Args
 	var animeName, epNo string
-	if len(arguments) == 1 {
+	if len(arguments) <= 2 {
+		fmt.Println("Enter Anime-Name Episode-Number in \"name ep-no\" format ")
+		fmt.Println("Example: (shingeki-no-kyojin 1) (shingeki-no-kyojin-dub 1), for movies enter 1 for episode")
 		_, err := fmt.Scan(&animeName)
-		if err != nil {
-			log.Fatalln("Error while Reading the animeName from the command-line: ", err)
-		}
+		HandleReadingError(err, "Anime-Name")
 		_, err = fmt.Scan(&epNo)
-		if err != nil {
-			log.Fatalln("Error while Reading the epNo from the command-line: ", err)
-		}
+		HandleReadingError(err, "Episode-Number")
 	} else {
 		animeName = arguments[1]
 		epNo = arguments[2]
 	}
+	fmt.Printf("Playing %s episode %s \n", animeName, epNo)
 	client := &http.Client{}
 	request, err := http.NewRequest("GET", fmt.Sprintf("%s/watch/%s/%s", rootDomain, animeName, epNo), nil)
 	if err != nil {
@@ -67,4 +72,5 @@ func main() {
 			return
 		}
 	}
+	log.Println("Anime Doesn't exist, Recheck all the information!")
 }
