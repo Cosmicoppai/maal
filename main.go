@@ -5,12 +5,33 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
+	"os/exec"
+	"strings"
 )
 
+// anime-name ep_no sub/dub
+
+var rootDomain = "https://ww1.gogoanime2.org"
+
 func main() {
-	var rootDomain = "https://www1.gogoanime2.org"
+	arguments := os.Args
+	var animeName, epNo string
+	if len(arguments) == 1 {
+		_, err := fmt.Scan(&animeName)
+		if err != nil {
+			log.Fatalln("Error while Reading the animeName from the command-line: ", err)
+		}
+		_, err = fmt.Scan(&epNo)
+		if err != nil {
+			log.Fatalln("Error while Reading the epNo from the command-line: ", err)
+		}
+	} else {
+		animeName = arguments[1]
+		epNo = arguments[2]
+	}
 	client := &http.Client{}
-	request, err := http.NewRequest("GET", rootDomain+"/watch/shingeki-no-kyojin/1", nil)
+	request, err := http.NewRequest("GET", fmt.Sprintf("%s/watch/%s/%s", rootDomain, animeName, epNo), nil)
 	if err != nil {
 		log.Println(err)
 		return
@@ -29,6 +50,21 @@ func main() {
 			return
 		}
 		content := string(dataInBytes)
-		fmt.Println(content)
+		iframeStartIndex := strings.Index(content, "<iframe id=\"playerframe\" src=")
+		if iframeStartIndex == -1 {
+			fmt.Println(content, iframeStartIndex)
+			log.Println("Video src doesn't exist")
+			return
+		}
+		index := iframeStartIndex + 30
+		src := rootDomain + content[index:index+15]
+		fmt.Println(src)
+		cmd := exec.Command("T://bootstrapper/mpv.exe", src)
+		// cmd.Path = "T://bootstrapper"
+		cmd.Stderr = os.Stderr
+		if err := cmd.Run(); err != nil {
+			log.Println("Error while playing the video: ", err)
+			return
+		}
 	}
 }
