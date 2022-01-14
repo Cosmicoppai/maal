@@ -72,6 +72,7 @@ func main() {
 			}
 		} else {
 			log.Println("Anime Doesn't exist, Recheck all the information!")
+			log.Printf("Verify information on %s", rootDomain)
 		}
 	}
 }
