@@ -64,7 +64,7 @@ func main() {
 			endIndex := strings.Index(content, "\" style=\"width: 100%;\"")
 			src := rootDomain + content[:endIndex]
 			fmt.Println("Link Collected: ", src)
-			cmd := exec.Command("T://bootstrapper/mpv.exe", src)
+			cmd := exec.Command("mpv.exe", src)
 			cmd.Stderr = os.Stderr
 			if err := cmd.Run(); err != nil {
 				log.Println("Error while playing the video: ", err)
