@@ -24,6 +24,11 @@ var rootDomain = "https://ww1.gogoanime2.org"
 func main() {
 	myFigure := figure.NewColorFigure("MAAL", "doh", "blue", true)
 	myFigure.Print()
+	_, err := exec.LookPath("mpv")
+	if err != nil {
+		log.Println(colorRed, "Make Sure you've installed the mpv video player(https://mpv.io) and added in the path")
+		return
+	}
 	for {
 		var animeName, epNo string
 
