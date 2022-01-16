@@ -15,6 +15,8 @@
 
 ## Requirements
 
+[Golang](https://go.dev/) >= 1.7
+
 [mpv](https://mpv.io) Video Player is required to be installed. The program will try to install the player in windows using the installation [script](./scripts/updater.ps1). In case of failure please install mpv globally by following instructions below:
 
 ### Windows
