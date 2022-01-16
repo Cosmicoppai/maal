@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -10,33 +9,31 @@ import (
 	"path/filepath"
 )
 
-func installPlayer() error {
-	scriptPath, err := filepath.Abs("scripts/updater.bat")
-	if err != nil {
-		log.Println(err)
-		return err
-	}
-	cmd := exec.Command("powershell", "-NoProfile", "-Command", "start", scriptPath)
-	var _err bytes.Buffer
-	cmd.Stderr = &_err
-	cmd.Stdout = os.Stdout
-	err = cmd.Start()
-	if HandleInstallError(err, fmt.Sprintf("Error while installing the mpv Player: %s", _err.String())) {
-		return err
-	}
+func installPlayer() (string, error) {
+	var path string
+	path1, err1 := exec.LookPath("mpv")
+	path2, err2 := exec.LookPath("scripts/mpv")
+	if (err1 != nil) && (err2 != nil) {
 
-	processState, _ := cmd.Process.Wait()
-	fmt.Println(processState.ExitCode(), processState.Exited())
-	if processState.Exited() && (processState.ExitCode() == 0) {
-		pathVar := os.Getenv("PATH")
-		playerPATH, _ := os.Getwd()
-		newPATH := fmt.Sprintf("%s;%s", pathVar, playerPATH)
-		err = os.Setenv("PATH", newPATH)
-		if HandleInstallError(err, "Error while adding the executable to path") {
-			return err
+		scriptPath, err := filepath.Abs("scripts/updater.bat")
+		if err != nil {
+			log.Println(err)
+			return "", err
 		}
-
-		return nil
+		cmd := exec.Command("powershell", "-NoProfile", "-Command", "start", scriptPath)
+		var _err bytes.Buffer
+		cmd.Stderr = &_err
+		cmd.Stdout = os.Stdout
+		err = cmd.Run()
+		if HandleInstallError(err, fmt.Sprintf("Error while installing the mpv Player: %s", _err.String())) {
+			return "", err
+		}
+		return "scripts/mpv", nil
 	}
-	return errors.New("installation process not completed")
+	if path1 == "" {
+		path = path2
+	} else {
+		path = path1
+	}
+	return path, nil
 }

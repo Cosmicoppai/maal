@@ -18,16 +18,16 @@ var rootDomain = "https://ww1.gogoanime2.org"
 func main() {
 	myFigure := figure.NewColorFigure("MAAL", "doh", "blue", true)
 	myFigure.Print()
-	err := installPlayer()
+	fmt.Println()
+	videoPlayer, err := installPlayer()
 	if err != nil {
-		log.Println(err)
-		log.Fatalln("Please Install the mpv player and add it to the path")
+		log.Fatalln("Please Install the mpv videoPlayer(https://mpv.io) and add it to the PATH")
 	}
 	for {
 		var animeName, epNo string
 
-		fmt.Println(colorGreen, "Enter Anime-Name Episode-Number in \"name ep-no\" format ")
-		fmt.Println("Example: (shingeki-no-kyojin 1) (shingeki-no-kyojin-dub 1), for movies enter 1 for episode (kimi-no-na-wa 1)")
+		fmt.Println(colorGreen, "====> Enter Anime-Name Episode-Number in \"name ep-no\" format ")
+		fmt.Println("----> Example: (shingeki-no-kyojin 1) (shingeki-no-kyojin-dub 1), for movies enter 1 for episode (kimi-no-na-wa 1)")
 		_, err := fmt.Scan(&animeName)
 		HandleError(err, "Error while Reading the Anime-Name from the command-line: ")
 		_, err = fmt.Scan(&epNo)
@@ -60,7 +60,7 @@ func main() {
 			endIndex := strings.Index(content, "\" style=\"width: 100%;\"")
 			src := rootDomain + content[:endIndex]
 			fmt.Println(colorCyan, "Link Collected: ", src)
-			cmd := exec.Command("mpv", src)
+			cmd := exec.Command(videoPlayer, src)
 			cmd.Stderr = os.Stderr
 			if err := cmd.Run(); err != nil {
 				log.Println(colorRed, "Error while playing the video: ", err)
