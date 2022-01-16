@@ -1,4 +1,4 @@
-![header](./assets/ss.png)
+![header](static/ss.png)
 
 # MAAL
 
