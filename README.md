@@ -48,6 +48,16 @@ Or, you can follow the steps [here](https://mpv.io/installation/) for other mpv 
 
 ```
 git clone https://github.com/cosmicoppai/maal
+
+-------------
+Either build an executable file:
+
+go build .
+maal
+-------------
+or :
+
+go run .
 ```
 
 ## License
