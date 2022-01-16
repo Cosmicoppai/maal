@@ -13,6 +13,11 @@
 
 - Watch specific anime series
 
+## Limitations
+
+- Only Support Anime name in japanese | [confirm Anime-Name here](https://ww1.gogoanime2.org/)
+- Specific Anime series available
+
 ## Requirements
 
 [Golang](https://go.dev/) >= 1.7
