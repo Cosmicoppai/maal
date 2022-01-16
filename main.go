@@ -13,21 +13,15 @@ import (
 
 // anime-name ep_no  -> Input Format
 
-func HandleError(err error, msg string) {
-	if err != nil {
-		log.Println(colorRed, msg, err)
-	}
-}
-
 var rootDomain = "https://ww1.gogoanime2.org"
 
 func main() {
 	myFigure := figure.NewColorFigure("MAAL", "doh", "blue", true)
 	myFigure.Print()
-	_, err := exec.LookPath("mpv")
+	err := installPlayer()
 	if err != nil {
-		log.Println(colorRed, "Make Sure you've installed the mpv video player(https://mpv.io) and added in the path")
-		return
+		log.Println(err)
+		log.Fatalln("Please Install the mpv player and add it to the path")
 	}
 	for {
 		var animeName, epNo string
