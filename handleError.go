@@ -6,12 +6,10 @@ import (
 )
 
 func HandleError(err error, msg string) {
-	if err != nil {
-		if err == io.EOF {
-			log.Println(colorRed, "Exiting...")
-		} else {
-			log.Println(colorRed, msg, err)
-		}
+	if err == io.EOF {
+		log.Println(colorRed, "Exiting...")
+	} else {
+		log.Println(colorRed, msg, err)
 	}
 }
 
